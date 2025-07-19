@@ -6,7 +6,7 @@ import jakarta.validation.constraints.*;
  * Search Data Transfer Object
  * 
  * This DTO is used for form validation and data transfer between layers.
- * Contains validation annotations for search form validation.
+ * Contains simple validation annotations for search form validation.
  * 
  * @author CCT Student
  * @version 1.0
@@ -14,15 +14,12 @@ import jakarta.validation.constraints.*;
 public class SearchDto {
     
     @Size(max = 20, message = "Statistic code must not exceed 20 characters")
-    @Pattern(regexp = "^[a-zA-Z0-9]*$", message = "Statistic code can only contain letters and numbers")
     private String statisticCode;
     
     @Size(max = 6, message = "Quarter must not exceed 6 characters")
-    @Pattern(regexp = "^Q[1-4]\\d{4}$", message = "Quarter must be in format Q1YYYY, Q2YYYY, Q3YYYY, or Q4YYYY")
     private String quarter;
     
     @Size(max = 20, message = "Sex must not exceed 20 characters")
-    @Pattern(regexp = "^[a-zA-Z\\s]*$", message = "Sex can only contain letters and spaces")
     private String sex;
     
     @Min(value = 0, message = "Page number must be 0 or greater")
@@ -32,11 +29,8 @@ public class SearchDto {
     @Max(value = 100, message = "Page size must not exceed 100")
     private Integer size = 10;
     
-    @Pattern(regexp = "^(asc|desc)$", message = "Sort direction must be 'asc' or 'desc'")
     private String sortDir = "desc";
     
-    @Size(max = 20, message = "Sort field must not exceed 20 characters")
-    @Pattern(regexp = "^[a-zA-Z_]*$", message = "Sort field can only contain letters and underscores")
     private String sortBy = "quarter";
     
     // Default constructor

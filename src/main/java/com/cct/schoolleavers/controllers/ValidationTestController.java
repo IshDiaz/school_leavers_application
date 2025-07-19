@@ -20,7 +20,7 @@ import java.util.Map;
  * Validation Test Controller
  * 
  * This controller provides endpoints to test form validation functionality.
- * It demonstrates various validation scenarios and error handling.
+ * It demonstrates simple validation scenarios for a simple system.
  * 
  * @author CCT Student
  * @version 1.0
@@ -170,41 +170,6 @@ public class ValidationTestController {
     }
     
     /**
-     * Test manual validation using ValidationService
-     * 
-     * @param schoolLeaverDto the school leaver data to validate
-     * @return validation result
-     */
-    @PostMapping("/manual-validation")
-    public ResponseEntity<Map<String, Object>> testManualValidation(
-            @RequestBody SchoolLeaverDto schoolLeaverDto) {
-        
-        logger.info("Testing manual validation for: {}", schoolLeaverDto.getStatisticCode());
-        
-        Map<String, Object> response = new HashMap<>();
-        
-        // Create a mock binding result for demonstration
-        org.springframework.validation.BeanPropertyBindingResult bindingResult = 
-            new org.springframework.validation.BeanPropertyBindingResult(schoolLeaverDto, "schoolLeaverDto");
-        
-        boolean isValid = validationService.validateSchoolLeaverForm(schoolLeaverDto, bindingResult);
-        
-        if (isValid) {
-            response.put("valid", true);
-            response.put("message", "Manual validation passed");
-            response.put("data", schoolLeaverDto);
-            logger.info("Manual validation passed");
-        } else {
-            response.put("valid", false);
-            response.put("errors", validationService.getValidationErrors(bindingResult));
-            response.put("message", "Manual validation failed");
-            logger.warn("Manual validation failed with {} errors", bindingResult.getErrorCount());
-        }
-        
-        return ResponseEntity.ok(response);
-    }
-    
-    /**
      * Get validation examples
      * 
      * @return examples of valid and invalid data
@@ -225,12 +190,12 @@ public class ValidationTestController {
         
         // Invalid school leaver example
         SchoolLeaverDto invalidSchoolLeaver = new SchoolLeaverDto();
-        invalidSchoolLeaver.setStatisticCode("SL-001"); // Invalid: contains hyphen
+        invalidSchoolLeaver.setStatisticCode(""); // Invalid: empty
         invalidSchoolLeaver.setStatisticLabel(""); // Invalid: empty
-        invalidSchoolLeaver.setQuarter("Q52023"); // Invalid: Q5 doesn't exist
-        invalidSchoolLeaver.setSex("Male123"); // Invalid: contains numbers
-        invalidSchoolLeaver.setUnit("Count@"); // Invalid: contains @
-        invalidSchoolLeaver.setValue(new BigDecimal("1000.00")); // Invalid: exceeds 999.99
+        invalidSchoolLeaver.setQuarter(""); // Invalid: empty
+        invalidSchoolLeaver.setSex(""); // Invalid: empty
+        invalidSchoolLeaver.setUnit(""); // Invalid: empty
+        invalidSchoolLeaver.setValue(null); // Invalid: null
         
         // Valid user example
         UserDto validUser = new UserDto();
@@ -240,8 +205,8 @@ public class ValidationTestController {
         
         // Invalid user example
         UserDto invalidUser = new UserDto();
-        invalidUser.setUsername("CCT"); // Invalid: too short
-        invalidUser.setPassword("123"); // Invalid: too short
+        invalidUser.setUsername(""); // Invalid: empty
+        invalidUser.setPassword(""); // Invalid: empty
         invalidUser.setConfirmPassword("54321"); // Invalid: doesn't match
         
         // Valid search example
@@ -256,13 +221,8 @@ public class ValidationTestController {
         
         // Invalid search example
         SearchDto invalidSearch = new SearchDto();
-        invalidSearch.setStatisticCode("SL-001"); // Invalid: contains hyphen
-        invalidSearch.setQuarter("Q52023"); // Invalid: Q5 doesn't exist
-        invalidSearch.setSex("Male123"); // Invalid: contains numbers
         invalidSearch.setPage(-1); // Invalid: negative page
         invalidSearch.setSize(101); // Invalid: exceeds max
-        invalidSearch.setSortDir("invalid"); // Invalid: not asc/desc
-        invalidSearch.setSortBy("quarter@"); // Invalid: contains @
         
         examples.put("validSchoolLeaver", validSchoolLeaver);
         examples.put("invalidSchoolLeaver", invalidSchoolLeaver);

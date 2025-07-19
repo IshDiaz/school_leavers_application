@@ -6,7 +6,7 @@ import jakarta.validation.constraints.*;
  * User Data Transfer Object
  * 
  * This DTO is used for form validation and data transfer between layers.
- * Contains comprehensive validation annotations for backend form validation.
+ * Contains simple validation annotations for backend form validation.
  * 
  * @author CCT Student
  * @version 1.0
@@ -16,12 +16,11 @@ public class UserDto {
     private Long id;
     
     @NotBlank(message = "Username is required")
-    @Size(min = 4, max = 20, message = "Username must be between 4 and 20 characters")
-    @Pattern(regexp = "^[a-zA-Z0-9]+$", message = "Username can only contain letters and numbers")
+    @Size(min = 3, max = 20, message = "Username must be between 3 and 20 characters")
     private String username;
     
     @NotBlank(message = "Password is required")
-    @Size(min = 4, max = 50, message = "Password must be between 4 and 50 characters")
+    @Size(min = 3, max = 50, message = "Password must be between 3 and 50 characters")
     private String password;
     
     private String confirmPassword;
