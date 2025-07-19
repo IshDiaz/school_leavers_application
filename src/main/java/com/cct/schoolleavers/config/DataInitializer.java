@@ -1,8 +1,12 @@
 package com.cct.schoolleavers.config;
 
 import com.cct.schoolleavers.entities.User;
+import com.cct.schoolleavers.entities.SchoolLeaver;
 import com.cct.schoolleavers.repositories.UserRepository;
+import com.cct.schoolleavers.repositories.SchoolLeaverRepository;
 import com.cct.schoolleavers.util.Constants;
+import com.cct.schoolleavers.util.DataImportUtil;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +32,12 @@ public class DataInitializer implements CommandLineRunner {
     private UserRepository userRepository;
     
     @Autowired
+    private SchoolLeaverRepository schoolLeaverRepository;
+    
+    @Autowired
+    private DataImportUtil dataImportUtil;
+    
+    @Autowired
     private PasswordEncoder passwordEncoder;
     
     @Override
@@ -36,6 +46,13 @@ public class DataInitializer implements CommandLineRunner {
         
         // Initialize default user
         initializeDefaultUser();
+        
+        // Note: School leavers data should be imported from your CSV dataset
+        // initializeSampleSchoolLeaversData(); // Commented out since you have real data
+        
+        // Display statistics
+        displayUserStatistics();
+        displaySchoolLeaversStatistics();
         
         logger.info("Data initialization completed successfully.");
     }
@@ -117,6 +134,69 @@ public class DataInitializer implements CommandLineRunner {
             
         } catch (Exception e) {
             logger.error("Error displaying user statistics: {}", e.getMessage(), e);
+        }
+    }
+    
+    /**
+     * Initialize sample school leavers data
+     */
+    private void initializeSampleSchoolLeaversData() {
+        try {
+            // Check if data already exists
+            long existingCount = schoolLeaverRepository.count();
+            if (existingCount > 0) {
+                logger.info("School leavers data already exists ({} records), skipping sample data creation", existingCount);
+                return;
+            }
+            
+            logger.info("Creating sample school leavers data...");
+            
+            // Import sample data using the utility
+            int importedCount = dataImportUtil.importSampleData();
+            
+            logger.info("Sample school leavers data created successfully: {} records", importedCount);
+            
+        } catch (Exception e) {
+            logger.error("Error creating sample school leavers data: {}", e.getMessage(), e);
+        }
+    }
+    
+    /**
+     * Display school leavers statistics
+     */
+    private void displaySchoolLeaversStatistics() {
+        try {
+            long totalRecords = schoolLeaverRepository.count();
+            
+            if (totalRecords > 0) {
+                logger.info("School Leavers Data Statistics:");
+                logger.info("- Total Records: {}", totalRecords);
+                
+                // Get distinct values
+                List<String> distinctCodes = schoolLeaverRepository.findDistinctStatisticCodes();
+                List<String> distinctQuarters = schoolLeaverRepository.findDistinctQuarters();
+                List<String> distinctSexes = schoolLeaverRepository.findDistinctSexes();
+                
+                logger.info("- Distinct Statistic Codes: {}", distinctCodes.size());
+                logger.info("- Distinct Quarters: {}", distinctQuarters.size());
+                logger.info("- Distinct Sexes: {}", distinctSexes.size());
+                
+                // Display some sample data
+                List<SchoolLeaver> sampleRecords = schoolLeaverRepository.findAll().subList(0, Math.min(3, (int) totalRecords));
+                logger.info("Sample Records:");
+                for (SchoolLeaver record : sampleRecords) {
+                    logger.info("  - {}: {} ({}) = {}", 
+                        record.getStatisticCode(), 
+                        record.getStatisticLabel(), 
+                        record.getQuarter(), 
+                        record.getValue());
+                }
+            } else {
+                logger.info("No school leavers data found");
+            }
+            
+        } catch (Exception e) {
+            logger.error("Error displaying school leavers statistics: {}", e.getMessage(), e);
         }
     }
 } 
