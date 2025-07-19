@@ -114,7 +114,7 @@ public class UserService {
             User user = new User();
             user.setUsername(userDto.getUsername());
             user.setPassword(userDto.getPassword()); // Simple password storage for assessment
-            user.setEnabled(userDto.isEnabled());
+            user.setEnabled(userDto.getEnabled());
             
             User savedUser = userRepository.save(user);
             logger.info("User created successfully: {}", savedUser.getUsername());
@@ -225,7 +225,7 @@ public class UserService {
                 existingUser.setPassword(userDto.getPassword());
             }
             
-            existingUser.setEnabled(userDto.isEnabled());
+            existingUser.setEnabled(userDto.getEnabled());
             
             User updatedUser = userRepository.save(existingUser);
             logger.info("User updated successfully: {}", updatedUser.getUsername());
