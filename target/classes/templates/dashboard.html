@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title}">Dashboard - School Leavers System</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        body {
+            background: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            color: white !important;
+        }
+        
+        .nav-link {
+            color: rgba(255, 255, 255, 0.9) !important;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            color: white !important;
+            transform: translateY(-1px);
+        }
+        
+        .main-content {
+            padding: 2rem 0;
+        }
+        
+        .welcome-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: none;
+        }
+        
+        .welcome-icon {
+            font-size: 3rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            padding: 1.5rem;
+            height: 100%;
+            border: none;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .stats-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .stats-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stats-label {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="/dashboard">
+                <i class="fas fa-graduation-cap me-2"></i>
+                School Leavers System
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/dashboard">
+                            <i class="fas fa-home me-1"></i>Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/api/school-leavers">
+                            <i class="fas fa-database me-1"></i>Data
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/api/health">
+                            <i class="fas fa-heartbeat me-1"></i>Health
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/logout">
+                            <i class="fas fa-sign-out-alt me-1"></i>Logout
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container">
+            <!-- Welcome Card -->
+            <div class="welcome-card text-center">
+                <div class="welcome-icon">
+                    <i class="fas fa-tachometer-alt"></i>
+                </div>
+                <h1 class="mb-3">Welcome to Your Dashboard</h1>
+                <p class="lead text-muted" th:text="${message}">
+                    Welcome to the School Leavers System Dashboard
+                </p>
+                <p class="text-muted">
+                    Manage your school leavers data with our comprehensive CRUD system
+                </p>
+            </div>
+            
+            <!-- Statistics Row -->
+            <div class="row mb-4">
+                <div class="col-md-3 mb-3">
+                    <div class="stats-card">
+                        <div class="stats-number" id="totalRecords">-</div>
+                        <div class="stats-label">Total Records</div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="stats-card">
+                        <div class="stats-number" id="activeUsers">1</div>
+                        <div class="stats-label">Active Users</div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="stats-card">
+                        <div class="stats-number" id="systemStatus">✓</div>
+                        <div class="stats-label">System Status</div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="stats-card">
+                        <div class="stats-number" id="version">1.0</div>
+                        <div class="stats-label">Version</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Features Grid -->
+            <div class="row">
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="feature-card text-center">
+                        <div class="feature-icon">
+                            <i class="fas fa-plus-circle"></i>
+                        </div>
+                        <h5>Create Records</h5>
+                        <p class="text-muted">Add new school leaver data to the system</p>
+                        <a href="/api/school-leavers" class="btn btn-primary btn-sm">
+                            <i class="fas fa-plus me-1"></i>Create
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="feature-card text-center">
+                        <div class="feature-icon">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <h5>Search & View</h5>
+                        <p class="text-muted">Search and view existing records</p>
+                        <a href="/api/school-leavers" class="btn btn-primary btn-sm">
+                            <i class="fas fa-search me-1"></i>Search
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="feature-card text-center">
+                        <div class="feature-icon">
+                            <i class="fas fa-edit"></i>
+                        </div>
+                        <h5>Update Records</h5>
+                        <p class="text-muted">Modify existing school leaver data</p>
+                        <a href="/api/school-leavers" class="btn btn-primary btn-sm">
+                            <i class="fas fa-edit me-1"></i>Update
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="feature-card text-center">
+                        <div class="feature-icon">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                        <h5>Statistics</h5>
+                        <p class="text-muted">View system statistics and reports</p>
+                        <a href="/api/school-leavers/statistics" class="btn btn-primary btn-sm">
+                            <i class="fas fa-chart-bar me-1"></i>Stats
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Quick Actions -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="welcome-card">
+                        <h4 class="mb-3">
+                            <i class="fas fa-bolt me-2"></i>Quick Actions
+                        </h4>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <a href="/api/school-leavers" class="btn btn-outline-primary w-100">
+                                    <i class="fas fa-list me-2"></i>View All Records
+                                </a>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <a href="/api/school-leavers/search" class="btn btn-outline-primary w-100">
+                                    <i class="fas fa-search me-2"></i>Advanced Search
+                                </a>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <a href="/api/health" class="btn btn-outline-primary w-100">
+                                    <i class="fas fa-heartbeat me-2"></i>System Health
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Load dashboard statistics
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load total records count
+            fetch('/api/school-leavers')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success && data.count !== undefined) {
+                        document.getElementById('totalRecords').textContent = data.count;
+                    }
+                })
+                .catch(() => {
+                    document.getElementById('totalRecords').textContent = 'N/A';
+                });
+            
+            // Check system health
+            fetch('/api/health')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'UP') {
+                        document.getElementById('systemStatus').textContent = '✓';
+                        document.getElementById('systemStatus').style.color = '#48bb78';
+                    } else {
+                        document.getElementById('systemStatus').textContent = '✗';
+                        document.getElementById('systemStatus').style.color = '#f56565';
+                    }
+                })
+                .catch(() => {
+                    document.getElementById('systemStatus').textContent = '?';
+                    document.getElementById('systemStatus').style.color = '#ed8936';
+                });
+        });
+    </script>
+</body>
+</html> 
