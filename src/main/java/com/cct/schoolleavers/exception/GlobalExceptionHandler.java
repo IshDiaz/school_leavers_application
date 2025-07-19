@@ -1,21 +1,25 @@
 package com.cct.schoolleavers.exception;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindException;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.context.request.WebRequest;
 
-import jakarta.servlet.http.HttpServletRequest;
-import java.util.logging.Logger;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Global Exception Handler
  * 
- * This class handles application-wide exceptions and provides
- * consistent error responses across the application.
+ * This class handles all exceptions thrown by the application
+ * and provides appropriate error responses.
  * 
  * @author CCT Student
  * @version 1.0
@@ -23,76 +27,265 @@ import java.util.logging.Logger;
 @ControllerAdvice
 public class GlobalExceptionHandler {
     
-    private static final Logger logger = Logger.getLogger(GlobalExceptionHandler.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
     
     /**
-     * Handle validation exceptions
+     * Handle validation errors
+     * 
+     * @param ex the validation exception
+     * @param request the web request
+     * @return error response with validation details
      */
-    @ExceptionHandler(BindException.class)
-    public String handleBindException(BindException ex, Model model) {
-        logger.warning("Validation error: " + ex.getMessage());
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse> handleValidationErrors(
+            MethodArgumentNotValidException ex, WebRequest request) {
         
-        model.addAttribute("error", "Please correct the following errors:");
-        model.addAttribute("bindingResult", ex.getBindingResult());
+        logger.warn("Validation error occurred: {}", ex.getMessage());
         
-        return "error/validation";
+        BindingResult bindingResult = ex.getBindingResult();
+        Map<String, String> fieldErrors = new HashMap<>();
+        
+        for (FieldError error : bindingResult.getFieldErrors()) {
+            fieldErrors.put(error.getField(), error.getDefaultMessage());
+        }
+        
+        ErrorResponse errorResponse = new ErrorResponse(
+            LocalDateTime.now(),
+            HttpStatus.BAD_REQUEST.value(),
+            "Validation Error",
+            "One or more fields have validation errors",
+            fieldErrors
+        );
+        
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
     
     /**
-     * Handle resource not found exceptions
+     * Handle resource not found errors
+     * 
+     * @param ex the resource not found exception
+     * @param request the web request
+     * @return error response
      */
     @ExceptionHandler(ResourceNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public String handleResourceNotFoundException(ResourceNotFoundException ex, Model model) {
-        logger.warning("Resource not found: " + ex.getMessage());
+    public ResponseEntity<ErrorResponse> handleResourceNotFound(
+            ResourceNotFoundException ex, WebRequest request) {
         
-        model.addAttribute("error", ex.getMessage());
-        model.addAttribute("status", "404");
-        model.addAttribute("message", "The requested resource was not found");
+        logger.warn("Resource not found: {}", ex.getMessage());
         
-        return "error/404";
+        ErrorResponse errorResponse = new ErrorResponse(
+            LocalDateTime.now(),
+            HttpStatus.NOT_FOUND.value(),
+            "Resource Not Found",
+            ex.getMessage(),
+            null
+        );
+        
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
     
     /**
-     * Handle general runtime exceptions
+     * Handle illegal argument errors
+     * 
+     * @param ex the illegal argument exception
+     * @param request the web request
+     * @return error response
+     */
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorResponse> handleIllegalArgument(
+            IllegalArgumentException ex, WebRequest request) {
+        
+        logger.warn("Illegal argument error: {}", ex.getMessage());
+        
+        ErrorResponse errorResponse = new ErrorResponse(
+            LocalDateTime.now(),
+            HttpStatus.BAD_REQUEST.value(),
+            "Invalid Argument",
+            ex.getMessage(),
+            null
+        );
+        
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+    
+    /**
+     * Handle authentication errors
+     * 
+     * @param ex the authentication exception
+     * @param request the web request
+     * @return error response
+     */
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ErrorResponse> handleAuthentication(
+            AuthenticationException ex, WebRequest request) {
+        
+        logger.warn("Authentication error: {}", ex.getMessage());
+        
+        ErrorResponse errorResponse = new ErrorResponse(
+            LocalDateTime.now(),
+            HttpStatus.UNAUTHORIZED.value(),
+            "Authentication Failed",
+            ex.getMessage(),
+            null
+        );
+        
+        return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
+    }
+    
+    /**
+     * Handle unauthorized access errors
+     * 
+     * @param ex the unauthorized exception
+     * @param request the web request
+     * @return error response
+     */
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<ErrorResponse> handleUnauthorized(
+            UnauthorizedException ex, WebRequest request) {
+        
+        logger.warn("Unauthorized access: {}", ex.getMessage());
+        
+        ErrorResponse errorResponse = new ErrorResponse(
+            LocalDateTime.now(),
+            HttpStatus.FORBIDDEN.value(),
+            "Access Denied",
+            ex.getMessage(),
+            null
+        );
+        
+        return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
+    }
+    
+    /**
+     * Handle data access errors
+     * 
+     * @param ex the data access exception
+     * @param request the web request
+     * @return error response
+     */
+    @ExceptionHandler(DataAccessException.class)
+    public ResponseEntity<ErrorResponse> handleDataAccess(
+            DataAccessException ex, WebRequest request) {
+        
+        logger.error("Data access error: {}", ex.getMessage(), ex);
+        
+        ErrorResponse errorResponse = new ErrorResponse(
+            LocalDateTime.now(),
+            HttpStatus.INTERNAL_SERVER_ERROR.value(),
+            "Data Access Error",
+            "An error occurred while accessing data",
+            null
+        );
+        
+        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    
+    /**
+     * Handle general runtime errors
+     * 
+     * @param ex the runtime exception
+     * @param request the web request
+     * @return error response
      */
     @ExceptionHandler(RuntimeException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public String handleRuntimeException(RuntimeException ex, Model model) {
-        logger.severe("Runtime error: " + ex.getMessage());
+    public ResponseEntity<ErrorResponse> handleRuntime(
+            RuntimeException ex, WebRequest request) {
         
-        model.addAttribute("error", "An unexpected error occurred");
-        model.addAttribute("status", "500");
-        model.addAttribute("message", "Please try again later");
+        logger.error("Runtime error: {}", ex.getMessage(), ex);
         
-        return "error/500";
+        ErrorResponse errorResponse = new ErrorResponse(
+            LocalDateTime.now(),
+            HttpStatus.INTERNAL_SERVER_ERROR.value(),
+            "Internal Server Error",
+            "An unexpected error occurred",
+            null
+        );
+        
+        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
     
     /**
-     * Handle general exceptions
+     * Handle all other exceptions
+     * 
+     * @param ex the exception
+     * @param request the web request
+     * @return error response
      */
     @ExceptionHandler(Exception.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public String handleException(Exception ex, Model model) {
-        logger.severe("General error: " + ex.getMessage());
+    public ResponseEntity<ErrorResponse> handleGeneric(
+            Exception ex, WebRequest request) {
         
-        model.addAttribute("error", "An error occurred");
-        model.addAttribute("status", "500");
-        model.addAttribute("message", "Please contact the administrator");
+        logger.error("Generic error: {}", ex.getMessage(), ex);
         
-        return "error/500";
+        ErrorResponse errorResponse = new ErrorResponse(
+            LocalDateTime.now(),
+            HttpStatus.INTERNAL_SERVER_ERROR.value(),
+            "Internal Server Error",
+            "An unexpected error occurred",
+            null
+        );
+        
+        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
     
     /**
-     * Handle exceptions with redirect attributes
+     * Error Response class
      */
-    @ExceptionHandler(Exception.class)
-    public String handleExceptionWithRedirect(Exception ex, RedirectAttributes redirectAttributes, 
-                                            HttpServletRequest request) {
-        logger.severe("Error in request " + request.getRequestURI() + ": " + ex.getMessage());
+    public static class ErrorResponse {
+        private LocalDateTime timestamp;
+        private int status;
+        private String error;
+        private String message;
+        private Map<String, String> fieldErrors;
         
-        redirectAttributes.addFlashAttribute("error", "An error occurred. Please try again.");
+        public ErrorResponse(LocalDateTime timestamp, int status, String error, 
+                           String message, Map<String, String> fieldErrors) {
+            this.timestamp = timestamp;
+            this.status = status;
+            this.error = error;
+            this.message = message;
+            this.fieldErrors = fieldErrors;
+        }
         
-        return "redirect:/";
+        // Getters and Setters
+        public LocalDateTime getTimestamp() {
+            return timestamp;
+        }
+        
+        public void setTimestamp(LocalDateTime timestamp) {
+            this.timestamp = timestamp;
+        }
+        
+        public int getStatus() {
+            return status;
+        }
+        
+        public void setStatus(int status) {
+            this.status = status;
+        }
+        
+        public String getError() {
+            return error;
+        }
+        
+        public void setError(String error) {
+            this.error = error;
+        }
+        
+        public String getMessage() {
+            return message;
+        }
+        
+        public void setMessage(String message) {
+            this.message = message;
+        }
+        
+        public Map<String, String> getFieldErrors() {
+            return fieldErrors;
+        }
+        
+        public void setFieldErrors(Map<String, String> fieldErrors) {
+            this.fieldErrors = fieldErrors;
+        }
     }
 } 

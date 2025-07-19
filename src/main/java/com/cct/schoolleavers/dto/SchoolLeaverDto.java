@@ -1,13 +1,17 @@
 package com.cct.schoolleavers.dto;
 
+import com.cct.schoolleavers.validation.ValidQuarter;
+import com.cct.schoolleavers.validation.ValidStatisticCode;
+import com.cct.schoolleavers.validation.ValidValue;
 import jakarta.validation.constraints.*;
+
 import java.math.BigDecimal;
 
 /**
- * Data Transfer Object for School Leaver data
+ * School Leaver Data Transfer Object
  * 
- * This class is used for form handling and data transfer between
- * the presentation layer and service layer.
+ * This DTO is used for form validation and data transfer between layers.
+ * Contains comprehensive validation annotations for backend form validation.
  * 
  * @author CCT Student
  * @version 1.0
@@ -17,29 +21,35 @@ public class SchoolLeaverDto {
     private Long id;
     
     @NotBlank(message = "Statistic code is required")
-    @Size(max = 20, message = "Statistic code must not exceed 20 characters")
+    @Size(min = 1, max = 20, message = "Statistic code must be between 1 and 20 characters")
+    @ValidStatisticCode(message = "Statistic code must contain only letters and numbers")
     private String statisticCode;
     
     @NotBlank(message = "Statistic label is required")
-    @Size(max = 100, message = "Statistic label must not exceed 100 characters")
+    @Size(min = 1, max = 100, message = "Statistic label must be between 1 and 100 characters")
+    @Pattern(regexp = "^[a-zA-Z0-9\\s\\-\\(\\)\\,\\.]+$", 
+             message = "Statistic label can only contain letters, numbers, spaces, hyphens, parentheses, and commas")
     private String statisticLabel;
     
     @NotBlank(message = "Quarter is required")
-    @Pattern(regexp = "^[Q][1-4]\\d{4}$", message = "Quarter must be in format Q1YYYY, Q2YYYY, Q3YYYY, or Q4YYYY")
+    @ValidQuarter(message = "Quarter must be in format Q1YYYY, Q2YYYY, Q3YYYY, or Q4YYYY")
     private String quarter;
     
     @NotBlank(message = "Sex is required")
-    @Size(max = 20, message = "Sex must not exceed 20 characters")
+    @Size(min = 1, max = 20, message = "Sex must be between 1 and 20 characters")
+    @Pattern(regexp = "^[a-zA-Z\\s]+$", message = "Sex can only contain letters and spaces")
     private String sex;
     
     @NotBlank(message = "Unit is required")
-    @Size(max = 10, message = "Unit must not exceed 10 characters")
+    @Size(min = 1, max = 10, message = "Unit must be between 1 and 10 characters")
+    @Pattern(regexp = "^[a-zA-Z0-9\\s\\%]+$", message = "Unit can only contain letters, numbers, spaces, and %")
     private String unit;
     
     @NotNull(message = "Value is required")
-    @DecimalMin(value = "0.0", inclusive = true, message = "Value must be greater than or equal to 0")
+    @ValidValue(message = "Value must be between 0.0 and 999.99")
+    @DecimalMin(value = "0.0", inclusive = true, message = "Value must be greater than or equal to 0.0")
     @DecimalMax(value = "999.99", inclusive = true, message = "Value must be less than or equal to 999.99")
-    @Digits(integer = 3, fraction = 2, message = "Value must have up to 3 digits before decimal and 2 after")
+    @Digits(integer = 3, fraction = 2, message = "Value can have maximum 3 digits before decimal and 2 after")
     private BigDecimal value;
     
     // Default constructor

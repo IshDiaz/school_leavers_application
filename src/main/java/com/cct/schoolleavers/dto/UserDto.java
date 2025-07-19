@@ -3,10 +3,10 @@ package com.cct.schoolleavers.dto;
 import jakarta.validation.constraints.*;
 
 /**
- * Data Transfer Object for User data
+ * User Data Transfer Object
  * 
- * This class is used for form handling and data transfer between
- * the presentation layer and service layer for user authentication.
+ * This DTO is used for form validation and data transfer between layers.
+ * Contains comprehensive validation annotations for backend form validation.
  * 
  * @author CCT Student
  * @version 1.0
@@ -16,21 +16,23 @@ public class UserDto {
     private Long id;
     
     @NotBlank(message = "Username is required")
-    @Size(min = 3, max = 50, message = "Username must be between 3 and 50 characters")
+    @Size(min = 4, max = 20, message = "Username must be between 4 and 20 characters")
     @Pattern(regexp = "^[a-zA-Z0-9]+$", message = "Username can only contain letters and numbers")
     private String username;
     
     @NotBlank(message = "Password is required")
-    @Size(min = 5, max = 100, message = "Password must be between 5 and 100 characters")
+    @Size(min = 4, max = 50, message = "Password must be between 4 and 50 characters")
     private String password;
     
-    private boolean enabled = true;
+    private String confirmPassword;
+    
+    private Boolean enabled = true;
     
     // Default constructor
     public UserDto() {}
     
     // Constructor with all fields
-    public UserDto(Long id, String username, String password, boolean enabled) {
+    public UserDto(Long id, String username, String password, Boolean enabled) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -68,12 +70,32 @@ public class UserDto {
         this.password = password;
     }
     
-    public boolean isEnabled() {
+    public String getConfirmPassword() {
+        return confirmPassword;
+    }
+    
+    public void setConfirmPassword(String confirmPassword) {
+        this.confirmPassword = confirmPassword;
+    }
+    
+    public Boolean getEnabled() {
         return enabled;
     }
     
-    public void setEnabled(boolean enabled) {
+    public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
+    }
+    
+    /**
+     * Validate password confirmation
+     * 
+     * @return true if passwords match, false otherwise
+     */
+    public boolean isPasswordConfirmed() {
+        if (password == null || confirmPassword == null) {
+            return false;
+        }
+        return password.equals(confirmPassword);
     }
     
     @Override
