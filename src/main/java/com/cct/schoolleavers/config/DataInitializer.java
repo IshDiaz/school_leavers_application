@@ -4,21 +4,20 @@ import com.cct.schoolleavers.entities.User;
 import com.cct.schoolleavers.entities.SchoolLeaver;
 import com.cct.schoolleavers.repositories.UserRepository;
 import com.cct.schoolleavers.repositories.SchoolLeaverRepository;
-import com.cct.schoolleavers.util.Constants;
-import com.cct.schoolleavers.util.DataImportUtil;
-import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+
+import java.math.BigDecimal;
 
 /**
  * Data Initializer
  * 
- * This class initializes the database with required data
- * when the application starts.
+ * Initializes default data when the application starts.
+ * Ensures the default user exists with correct credentials.
+ * Creates sample school leaver data for testing.
  * 
  * @author CCT Student
  * @version 1.0
@@ -34,53 +33,53 @@ public class DataInitializer implements CommandLineRunner {
     @Autowired
     private SchoolLeaverRepository schoolLeaverRepository;
     
-    @Autowired
-    private DataImportUtil dataImportUtil;
-    
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-    
     @Override
     public void run(String... args) throws Exception {
-        logger.info("Starting data initialization...");
+        logger.info("Initializing default data...");
         
-        // Initialize default user
-        initializeDefaultUser();
+        // Ensure default user exists
+        createDefaultUser();
         
-        // Note: School leavers data should be imported from your CSV dataset
-        // initializeSampleSchoolLeaversData(); // Commented out since you have real data
+        // Create sample school leaver data (only if table exists)
+        try {
+            createSampleSchoolLeaverData();
+        } catch (Exception e) {
+            logger.warn("Could not create sample school leaver data: {}. Table may not exist yet.", e.getMessage());
+        }
         
-        // Display statistics
-        displayUserStatistics();
-        displaySchoolLeaversStatistics();
-        
-        logger.info("Data initialization completed successfully.");
+        logger.info("Data initialization completed.");
     }
     
     /**
-     * Initialize the default user with required credentials
+     * Create default user if it doesn't exist
      */
-    private void initializeDefaultUser() {
+    private void createDefaultUser() {
         try {
-            // Check if default user already exists
-            if (!userRepository.existsByUsername(Constants.DEFAULT_USERNAME)) {
-                logger.info("Creating default user: {}", Constants.DEFAULT_USERNAME);
+            String username = "CCT1234";
+            String password = "54321";
+            
+            // Check if user already exists
+            var existingUser = userRepository.findByUsername(username);
+            
+            if (existingUser.isPresent()) {
+                User user = existingUser.get();
+                logger.info("Default user already exists: {}", username);
                 
-                // Create default user
-                User defaultUser = new User();
-                defaultUser.setUsername(Constants.DEFAULT_USERNAME);
-                
-                // Encode password (in a real application, you would use BCrypt)
-                // For this simple system, we'll store the password as-is
-                defaultUser.setPassword(Constants.DEFAULT_PASSWORD);
-                defaultUser.setEnabled(true);
-                
-                // Save the user
-                User savedUser = userRepository.save(defaultUser);
-                
-                logger.info("Default user created successfully with ID: {}", savedUser.getId());
+                // Update password if needed
+                if (!password.equals(user.getPassword())) {
+                    user.setPassword(password);
+                    userRepository.save(user);
+                    logger.info("Updated password for user: {}", username);
+                }
             } else {
-                logger.info("Default user already exists: {}", Constants.DEFAULT_USERNAME);
+                // Create new user
+                User user = new User();
+                user.setUsername(username);
+                user.setPassword(password);
+                user.setEnabled(true);
+                
+                User savedUser = userRepository.save(user);
+                logger.info("Created default user: {} with ID: {}", username, savedUser.getId());
             }
             
         } catch (Exception e) {
@@ -89,114 +88,70 @@ public class DataInitializer implements CommandLineRunner {
     }
     
     /**
-     * Create additional test users if needed
+     * Create sample school leaver data for testing
      */
-    private void createTestUsers() {
-        try {
-            // Create test user 1
-            if (!userRepository.existsByUsername("testuser1")) {
-                User testUser1 = new User();
-                testUser1.setUsername("testuser1");
-                testUser1.setPassword("password123");
-                testUser1.setEnabled(true);
-                userRepository.save(testUser1);
-                logger.info("Test user 1 created: testuser1");
-            }
-            
-            // Create test user 2
-            if (!userRepository.existsByUsername("testuser2")) {
-                User testUser2 = new User();
-                testUser2.setUsername("testuser2");
-                testUser2.setPassword("password456");
-                testUser2.setEnabled(true);
-                userRepository.save(testUser2);
-                logger.info("Test user 2 created: testuser2");
-            }
-            
-        } catch (Exception e) {
-            logger.error("Error creating test users: {}", e.getMessage(), e);
-        }
-    }
-    
-    /**
-     * Display user statistics
-     */
-    private void displayUserStatistics() {
-        try {
-            long totalUsers = userRepository.count();
-            long enabledUsers = userRepository.countByEnabled(true);
-            long disabledUsers = userRepository.countByEnabled(false);
-            
-            logger.info("User Statistics:");
-            logger.info("- Total Users: {}", totalUsers);
-            logger.info("- Enabled Users: {}", enabledUsers);
-            logger.info("- Disabled Users: {}", disabledUsers);
-            
-        } catch (Exception e) {
-            logger.error("Error displaying user statistics: {}", e.getMessage(), e);
-        }
-    }
-    
-    /**
-     * Initialize sample school leavers data
-     */
-    private void initializeSampleSchoolLeaversData() {
+    private void createSampleSchoolLeaverData() {
         try {
             // Check if data already exists
             long existingCount = schoolLeaverRepository.count();
             if (existingCount > 0) {
-                logger.info("School leavers data already exists ({} records), skipping sample data creation", existingCount);
+                logger.info("School leaver data already exists ({} records), skipping sample data creation", existingCount);
                 return;
             }
             
-            logger.info("Creating sample school leavers data...");
+            logger.info("Creating sample school leaver data...");
             
-            // Import sample data using the utility
-            int importedCount = dataImportUtil.importSampleData();
+            // Create sample records
+            SchoolLeaver record1 = new SchoolLeaver();
+            record1.setStatisticCode("SL001");
+            record1.setStatisticLabel("School Leavers - Total");
+            record1.setQuarter("2023-Q1");
+            record1.setSex("All");
+            record1.setUnit("Number");
+            record1.setValue(new BigDecimal("1250.50"));
+            schoolLeaverRepository.save(record1);
             
-            logger.info("Sample school leavers data created successfully: {} records", importedCount);
+            SchoolLeaver record2 = new SchoolLeaver();
+            record2.setStatisticCode("SL002");
+            record2.setStatisticLabel("School Leavers - Male");
+            record2.setQuarter("2023-Q1");
+            record2.setSex("Male");
+            record2.setUnit("Number");
+            record2.setValue(new BigDecimal("650.25"));
+            schoolLeaverRepository.save(record2);
+            
+            SchoolLeaver record3 = new SchoolLeaver();
+            record3.setStatisticCode("SL003");
+            record3.setStatisticLabel("School Leavers - Female");
+            record3.setQuarter("2023-Q1");
+            record3.setSex("Female");
+            record3.setUnit("Number");
+            record3.setValue(new BigDecimal("600.25"));
+            schoolLeaverRepository.save(record3);
+            
+            SchoolLeaver record4 = new SchoolLeaver();
+            record4.setStatisticCode("SL001");
+            record4.setStatisticLabel("School Leavers - Total");
+            record4.setQuarter("2023-Q2");
+            record4.setSex("All");
+            record4.setUnit("Number");
+            record4.setValue(new BigDecimal("1300.75"));
+            schoolLeaverRepository.save(record4);
+            
+            SchoolLeaver record5 = new SchoolLeaver();
+            record5.setStatisticCode("SL002");
+            record5.setStatisticLabel("School Leavers - Male");
+            record5.setQuarter("2023-Q2");
+            record5.setSex("Male");
+            record5.setUnit("Number");
+            record5.setValue(new BigDecimal("675.50"));
+            schoolLeaverRepository.save(record5);
+            
+            logger.info("Sample school leaver data created successfully: 5 records");
             
         } catch (Exception e) {
-            logger.error("Error creating sample school leavers data: {}", e.getMessage(), e);
-        }
-    }
-    
-    /**
-     * Display school leavers statistics
-     */
-    private void displaySchoolLeaversStatistics() {
-        try {
-            long totalRecords = schoolLeaverRepository.count();
-            
-            if (totalRecords > 0) {
-                logger.info("School Leavers Data Statistics:");
-                logger.info("- Total Records: {}", totalRecords);
-                
-                // Get distinct values
-                List<String> distinctCodes = schoolLeaverRepository.findDistinctStatisticCodes();
-                List<String> distinctQuarters = schoolLeaverRepository.findDistinctQuarters();
-                List<String> distinctSexes = schoolLeaverRepository.findDistinctSexes();
-                
-                logger.info("- Distinct Statistic Codes: {}", distinctCodes.size());
-                logger.info("- Distinct Quarters: {}", distinctQuarters.size());
-                logger.info("- Distinct Sexes: {}", distinctSexes.size());
-                
-                // Display some sample data
-                List<SchoolLeaver> sampleRecords = schoolLeaverRepository.findAll().subList(0, Math.min(3, (int) totalRecords));
-                logger.info("Sample Records:");
-                for (SchoolLeaver record : sampleRecords) {
-                    logger.info("  - {}: {} ({}) = {}", 
-                        record.getStatisticCode(), 
-                        record.getStatisticLabel(), 
-                        record.getQuarter(), 
-                        record.getValue());
-                }
-            } else {
-                logger.info("No school leavers data found");
-            }
-            
-        } catch (Exception e) {
-            logger.error("Error displaying school leavers statistics: {}", e.getMessage(), e);
+            logger.error("Error creating sample school leaver data: {}", e.getMessage(), e);
+            throw e; // Re-throw to be caught by the main method
         }
     }
 } 

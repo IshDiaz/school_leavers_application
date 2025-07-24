@@ -172,17 +172,17 @@ public class DataImportUtil {
     private List<SchoolLeaver> createSampleData() {
         List<SchoolLeaver> sampleData = new ArrayList<>();
         
-        // Sample data entries
-        sampleData.add(new SchoolLeaver("SL001", "Total School Leavers", "Q12023", "Male", "Count", new BigDecimal("1250.50")));
-        sampleData.add(new SchoolLeaver("SL001", "Total School Leavers", "Q12023", "Female", "Count", new BigDecimal("1180.25")));
-        sampleData.add(new SchoolLeaver("SL002", "Employment Rate", "Q12023", "Male", "Percent", new BigDecimal("65.75")));
-        sampleData.add(new SchoolLeaver("SL002", "Employment Rate", "Q12023", "Female", "Percent", new BigDecimal("62.30")));
-        sampleData.add(new SchoolLeaver("SL003", "Further Education", "Q12023", "Male", "Count", new BigDecimal("450.00")));
-        sampleData.add(new SchoolLeaver("SL003", "Further Education", "Q12023", "Female", "Count", new BigDecimal("520.75")));
-        sampleData.add(new SchoolLeaver("SL001", "Total School Leavers", "Q22023", "Male", "Count", new BigDecimal("1320.00")));
-        sampleData.add(new SchoolLeaver("SL001", "Total School Leavers", "Q22023", "Female", "Count", new BigDecimal("1250.50")));
-        sampleData.add(new SchoolLeaver("SL002", "Employment Rate", "Q22023", "Male", "Percent", new BigDecimal("68.25")));
-        sampleData.add(new SchoolLeaver("SL002", "Employment Rate", "Q22023", "Female", "Percent", new BigDecimal("64.80")));
+        // Sample data entries - using the correct constructor with ID parameter
+        sampleData.add(new SchoolLeaver(null, "SL001", "Total School Leavers", "Q12023", "Male", "Count", new BigDecimal("1250.50")));
+        sampleData.add(new SchoolLeaver(null, "SL001", "Total School Leavers", "Q12023", "Female", "Count", new BigDecimal("1180.25")));
+        sampleData.add(new SchoolLeaver(null, "SL002", "Employment Rate", "Q12023", "Male", "Percent", new BigDecimal("65.75")));
+        sampleData.add(new SchoolLeaver(null, "SL002", "Employment Rate", "Q12023", "Female", "Percent", new BigDecimal("62.30")));
+        sampleData.add(new SchoolLeaver(null, "SL003", "Further Education", "Q12023", "Male", "Count", new BigDecimal("450.00")));
+        sampleData.add(new SchoolLeaver(null, "SL003", "Further Education", "Q12023", "Female", "Count", new BigDecimal("520.75")));
+        sampleData.add(new SchoolLeaver(null, "SL001", "Total School Leavers", "Q22023", "Male", "Count", new BigDecimal("1320.00")));
+        sampleData.add(new SchoolLeaver(null, "SL001", "Total School Leavers", "Q22023", "Female", "Count", new BigDecimal("1250.50")));
+        sampleData.add(new SchoolLeaver(null, "SL002", "Employment Rate", "Q22023", "Male", "Percent", new BigDecimal("68.25")));
+        sampleData.add(new SchoolLeaver(null, "SL002", "Employment Rate", "Q22023", "Female", "Percent", new BigDecimal("64.80")));
         
         return sampleData;
     }
@@ -206,28 +206,10 @@ public class DataImportUtil {
      */
     public String getDataStatistics() {
         long totalRecords = schoolLeaverRepository.count();
-        List<String> distinctCodes = schoolLeaverRepository.findDistinctStatisticCodes();
-        List<String> distinctQuarters = schoolLeaverRepository.findDistinctQuarters();
-        List<String> distinctSexes = schoolLeaverRepository.findDistinctSexes();
         
         StringBuilder stats = new StringBuilder();
         stats.append("Data Statistics:\n");
         stats.append("- Total Records: ").append(totalRecords).append("\n");
-        stats.append("- Distinct Statistic Codes: ").append(distinctCodes.size()).append("\n");
-        stats.append("- Distinct Quarters: ").append(distinctQuarters.size()).append("\n");
-        stats.append("- Distinct Sexes: ").append(distinctSexes.size()).append("\n");
-        
-        if (!distinctCodes.isEmpty()) {
-            stats.append("- Statistic Codes: ").append(String.join(", ", distinctCodes)).append("\n");
-        }
-        
-        if (!distinctQuarters.isEmpty()) {
-            stats.append("- Quarters: ").append(String.join(", ", distinctQuarters)).append("\n");
-        }
-        
-        if (!distinctSexes.isEmpty()) {
-            stats.append("- Sexes: ").append(String.join(", ", distinctSexes)).append("\n");
-        }
         
         return stats.toString();
     }

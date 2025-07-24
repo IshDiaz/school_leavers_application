@@ -135,13 +135,8 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/api/school-leavers">
+                        <a class="nav-link" href="/school-leavers">
                             <i class="fas fa-database me-1"></i>Data
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/api/health">
-                            <i class="fas fa-heartbeat me-1"></i>Health
                         </a>
                     </li>
                     <li class="nav-item">
@@ -208,7 +203,7 @@
                         </div>
                         <h5>Create Records</h5>
                         <p class="text-muted">Add new school leaver data to the system</p>
-                        <a href="/api/school-leavers" class="btn btn-primary btn-sm">
+                        <a href="/school-leavers/add" class="btn btn-primary btn-sm">
                             <i class="fas fa-plus me-1"></i>Create
                         </a>
                     </div>
@@ -221,7 +216,7 @@
                         </div>
                         <h5>Search & View</h5>
                         <p class="text-muted">Search and view existing records</p>
-                        <a href="/api/school-leavers" class="btn btn-primary btn-sm">
+                        <a href="/school-leavers" class="btn btn-primary btn-sm">
                             <i class="fas fa-search me-1"></i>Search
                         </a>
                     </div>
@@ -234,7 +229,7 @@
                         </div>
                         <h5>Update Records</h5>
                         <p class="text-muted">Modify existing school leaver data</p>
-                        <a href="/api/school-leavers" class="btn btn-primary btn-sm">
+                        <a href="/school-leavers" class="btn btn-primary btn-sm">
                             <i class="fas fa-edit me-1"></i>Update
                         </a>
                     </div>
@@ -247,7 +242,7 @@
                         </div>
                         <h5>Statistics</h5>
                         <p class="text-muted">View system statistics and reports</p>
-                        <a href="/api/school-leavers/statistics" class="btn btn-primary btn-sm">
+                        <a href="/school-leavers" class="btn btn-primary btn-sm">
                             <i class="fas fa-chart-bar me-1"></i>Stats
                         </a>
                     </div>
@@ -263,18 +258,18 @@
                         </h4>
                         <div class="row">
                             <div class="col-md-4 mb-3">
-                                <a href="/api/school-leavers" class="btn btn-outline-primary w-100">
+                                <a href="/school-leavers" class="btn btn-outline-primary w-100">
                                     <i class="fas fa-list me-2"></i>View All Records
                                 </a>
                             </div>
                             <div class="col-md-4 mb-3">
-                                <a href="/api/school-leavers/search" class="btn btn-outline-primary w-100">
+                                <a href="/school-leavers" class="btn btn-outline-primary w-100">
                                     <i class="fas fa-search me-2"></i>Advanced Search
                                 </a>
                             </div>
                             <div class="col-md-4 mb-3">
-                                <a href="/api/health" class="btn btn-outline-primary w-100">
-                                    <i class="fas fa-heartbeat me-2"></i>System Health
+                                <a href="/school-leavers/add" class="btn btn-outline-primary w-100">
+                                    <i class="fas fa-plus me-2"></i>Add New Record
                                 </a>
                             </div>
                         </div>
@@ -302,22 +297,9 @@
                     document.getElementById('totalRecords').textContent = 'N/A';
                 });
             
-            // Check system health
-            fetch('/api/health')
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'UP') {
-                        document.getElementById('systemStatus').textContent = '✓';
-                        document.getElementById('systemStatus').style.color = '#48bb78';
-                    } else {
-                        document.getElementById('systemStatus').textContent = '✗';
-                        document.getElementById('systemStatus').style.color = '#f56565';
-                    }
-                })
-                .catch(() => {
-                    document.getElementById('systemStatus').textContent = '?';
-                    document.getElementById('systemStatus').style.color = '#ed8936';
-                });
+            // Set system status to OK since we removed health check
+            document.getElementById('systemStatus').textContent = '✓';
+            document.getElementById('systemStatus').style.color = '#48bb78';
         });
     </script>
 </body>

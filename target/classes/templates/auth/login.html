@@ -20,6 +20,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            margin: 0;
+            padding: 20px;
         }
         
         .login-container {
@@ -31,6 +33,7 @@
             width: 100%;
             max-width: 450px;
             border: 1px solid rgba(255, 255, 255, 0.2);
+            margin: 0 auto;
         }
         
         .login-header {
@@ -147,40 +150,12 @@
             background-clip: text;
         }
         
-        .demo-credentials {
-            background: rgba(102, 126, 234, 0.1);
-            border: 1px solid rgba(102, 126, 234, 0.2);
-            border-radius: 12px;
-            padding: 1rem;
-            margin-top: 1.5rem;
-            text-align: center;
-        }
-        
-        .demo-credentials h6 {
-            color: #667eea;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
-        
-        .demo-credentials p {
-            color: #718096;
-            font-size: 0.9rem;
-            margin: 0;
-        }
-        
-        .demo-credentials .credentials {
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 8px;
-            padding: 0.5rem;
-            margin-top: 0.5rem;
-            font-family: 'Courier New', monospace;
-            font-weight: 600;
-            color: #2d3748;
-        }
-        
         @media (max-width: 576px) {
+            body {
+                padding: 10px;
+            }
+            
             .login-container {
-                margin: 1rem;
                 padding: 2rem;
             }
             
@@ -199,110 +174,94 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-12">
-                <div class="login-container">
-                    <!-- Header -->
-                    <div class="login-header">
-                        <div class="icon-container">
-                            <i class="fas fa-graduation-cap"></i>
-                        </div>
-                        <h1>Welcome Back</h1>
-                        <p>Sign in to access the School Leavers System</p>
-                    </div>
-                    
-                    <!-- Alert Messages -->
-                    <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
-                        <i class="fas fa-check-circle me-2"></i>
-                        <span th:text="${success}">Success message</span>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                    
-                    <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <i class="fas fa-exclamation-circle me-2"></i>
-                        <span th:text="${error}">Error message</span>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                    
-                    <div th:if="${param.error}" class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <i class="fas fa-exclamation-circle me-2"></i>
-                        Invalid username or password. Please try again.
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                    
-                    <div th:if="${param.logout}" class="alert alert-success alert-dismissible fade show" role="alert">
-                        <i class="fas fa-check-circle me-2"></i>
-                        You have been logged out successfully.
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                    
-                    <div th:if="${param.expired}" class="alert alert-warning alert-dismissible fade show" role="alert">
-                        <i class="fas fa-clock me-2"></i>
-                        Your session has expired. Please log in again.
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                    
-                    <!-- Login Form -->
-                    <form th:action="@{/login}" method="post" id="loginForm">
-                        <div class="form-floating">
-                            <input type="text" 
-                                   class="form-control" 
-                                   id="username" 
-                                   name="username" 
-                                   placeholder="Username"
-                                   th:value="${userDto?.username}"
-                                   required>
-                            <label for="username">
-                                <i class="fas fa-user me-2"></i>Username
-                            </label>
-                        </div>
-                        
-                        <div class="form-floating">
-                            <input type="password" 
-                                   class="form-control" 
-                                   id="password" 
-                                   name="password" 
-                                   placeholder="Password"
-                                   required>
-                            <label for="password">
-                                <i class="fas fa-lock me-2"></i>Password
-                            </label>
-                        </div>
-                        
-                        <button type="submit" class="btn btn-login" id="loginBtn">
-                            <span class="btn-text">
-                                <i class="fas fa-sign-in-alt me-2"></i>Sign In
-                            </span>
-                            <span class="loading">
-                                <i class="fas fa-spinner fa-spin me-2"></i>Signing In...
-                            </span>
-                        </button>
-                    </form>
-                    
-                    <!-- Demo Credentials -->
-                    <div class="demo-credentials">
-                        <h6><i class="fas fa-info-circle me-2"></i>Demo Credentials</h6>
-                        <p>Use these credentials to access the system:</p>
-                        <div class="credentials">
-                            Username: CCT1234<br>
-                            Password: 54321
-                        </div>
-                    </div>
-                    
-                    <!-- Footer -->
-                    <div class="login-footer">
-                        <p>
-                            <i class="fas fa-shield-alt me-2"></i>
-                            Secure authentication powered by Spring Security
-                        </p>
-                        <p>
-                            <i class="fas fa-code me-2"></i>
-                            School Leavers CRUD System v1.0
-                        </p>
-                    </div>
-                </div>
+    <div class="login-container">
+        <!-- Header -->
+        <div class="login-header">
+            <div class="icon-container">
+                <i class="fas fa-graduation-cap"></i>
             </div>
+            <h1>Welcome Back</h1>
+            <p>Sign in to access the School Leavers System</p>
+        </div>
+        
+        <!-- Alert Messages -->
+        <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i>
+            <span th:text="${success}">Success message</span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i>
+            <span th:text="${error}">Error message</span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        
+        <div th:if="${param.error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i>
+            Invalid username or password. Please try again.
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        
+        <div th:if="${param.logout}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i>
+            You have been logged out successfully.
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        
+        <div th:if="${param.expired}" class="alert alert-warning alert-dismissible fade show" role="alert">
+            <i class="fas fa-clock me-2"></i>
+            Your session has expired. Please log in again.
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        
+        <!-- Login Form -->
+        <form th:action="@{/login}" method="post" id="loginForm">
+            <div class="form-floating">
+                <input type="text" 
+                       class="form-control" 
+                       id="username" 
+                       name="username" 
+                       placeholder="Username"
+                       th:value="${userDto?.username}"
+                       required>
+                <label for="username">
+                    <i class="fas fa-user me-2"></i>Username
+                </label>
+            </div>
+            
+            <div class="form-floating">
+                <input type="password" 
+                       class="form-control" 
+                       id="password" 
+                       name="password" 
+                       placeholder="Password"
+                       required>
+                <label for="password">
+                    <i class="fas fa-lock me-2"></i>Password
+                </label>
+            </div>
+            
+            <button type="submit" class="btn btn-login" id="loginBtn">
+                <span class="btn-text">
+                    <i class="fas fa-sign-in-alt me-2"></i>Sign In
+                </span>
+                <span class="loading">
+                    <i class="fas fa-spinner fa-spin me-2"></i>Signing In...
+                </span>
+            </button>
+        </form>
+        
+        <!-- Footer -->
+        <div class="login-footer">
+            <p>
+                <i class="fas fa-shield-alt me-2"></i>
+                Secure authentication powered by Spring Security
+            </p>
+            <p>
+                <i class="fas fa-code me-2"></i>
+                School Leavers CRUD System v1.0
+            </p>
         </div>
     </div>
     

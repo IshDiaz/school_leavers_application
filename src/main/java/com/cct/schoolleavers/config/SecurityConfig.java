@@ -5,15 +5,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 /**
  * Security Configuration
  * 
  * Simple Spring Security setup for the school leavers system.
- * Uses basic authentication without complex security features.
+ * Basic authentication without complex security features.
  * 
  * @author CCT Student
  * @version 1.0
@@ -39,10 +37,12 @@ public class SecurityConfig {
             // Disable CSRF for simple system
             .csrf(csrf -> csrf.disable())
             
-            // Configure authorization
+            // Configure authorization - very permissive
             .authorizeHttpRequests(authz -> authz
                 // Public endpoints
                 .requestMatchers("/", "/login", "/api/health", "/api/test/**").permitAll()
+                // School leavers page and API endpoints
+                .requestMatchers("/school-leavers/**", "/api/school-leavers/**").permitAll()
                 // Static resources
                 .requestMatchers("/css/**", "/js/**", "/images/**", "/favicon.ico").permitAll()
                 // All other requests require authentication
@@ -67,24 +67,8 @@ public class SecurityConfig {
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID")
                 .permitAll()
-            )
-            
-            // Configure session management
-            .sessionManagement(session -> session
-                .maximumSessions(1)
-                .expiredUrl("/login?expired=true")
             );
         
         return http.build();
-    }
-    
-    /**
-     * Configure password encoder
-     * 
-     * @return NoOpPasswordEncoder for simple password storage
-     */
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance();
     }
 } 

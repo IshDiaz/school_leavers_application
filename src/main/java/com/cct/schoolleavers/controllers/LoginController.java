@@ -1,20 +1,16 @@
 package com.cct.schoolleavers.controllers;
 
-import com.cct.schoolleavers.dto.UserDto;
 import com.cct.schoolleavers.entities.User;
 import com.cct.schoolleavers.services.UserService;
-import com.cct.schoolleavers.services.ValidationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.servlet.http.HttpSession;
-import jakarta.validation.Valid;
 
 /**
  * Login Controller
@@ -33,9 +29,6 @@ public class LoginController {
     @Autowired
     private UserService userService;
     
-    @Autowired
-    private ValidationService validationService;
-    
     /**
      * Show login page
      * 
@@ -46,67 +39,49 @@ public class LoginController {
     public String showLoginPage(Model model) {
         logger.info("Showing login page");
         
-        if (!model.containsAttribute("userDto")) {
-            model.addAttribute("userDto", new UserDto());
-        }
-        
         return "auth/login";
     }
     
     /**
      * Handle login form submission
      * 
-     * @param userDto the user data
-     * @param bindingResult the binding result
+     * @param username the username
+     * @param password the password
      * @param session the HTTP session
-     * @param redirectAttributes the redirect attributes
-     * @return redirect to dashboard or back to login
+     * @param redirectAttributes redirect attributes
+     * @return redirect to dashboard or login page
      */
     @PostMapping("/login")
-    public String handleLogin(@Valid @ModelAttribute("userDto") UserDto userDto,
-                             BindingResult bindingResult,
+    public String handleLogin(@RequestParam String username,
+                             @RequestParam String password,
                              HttpSession session,
                              RedirectAttributes redirectAttributes) {
         
-        logger.info("Processing login for user: {}", userDto.getUsername());
-        
-        // Validate form data
-        if (bindingResult.hasErrors()) {
-            logger.warn("Login validation failed with {} errors", bindingResult.getErrorCount());
-            redirectAttributes.addFlashAttribute("error", "Please correct the errors below");
-            redirectAttributes.addFlashAttribute("userDto", userDto);
-            return "redirect:/login";
-        }
+        logger.info("Login attempt for user: {}", username);
         
         try {
-            // Sanitize input
-            userDto.setUsername(userDto.getUsername().trim());
-            userDto.setPassword(userDto.getPassword().trim());
+            // Simple authentication
+            User user = userService.authenticateUser(username, password);
             
-            // Authenticate user
-            User authenticatedUser = userService.authenticateUser(userDto.getUsername(), userDto.getPassword());
-            
-            if (authenticatedUser != null) {
-                // Store user info in session
-                session.setAttribute("username", userDto.getUsername());
-                session.setAttribute("isLoggedIn", true);
-                session.setAttribute("loginTime", System.currentTimeMillis());
+            if (user != null) {
+                // Set session attributes
+                session.setAttribute("userId", user.getId());
+                session.setAttribute("username", user.getUsername());
+                session.setAttribute("authenticated", true);
                 
-                logger.info("User {} logged in successfully", userDto.getUsername());
-                redirectAttributes.addFlashAttribute("success", "Welcome, " + userDto.getUsername() + "!");
+                logger.info("User {} logged in successfully", username);
+                redirectAttributes.addFlashAttribute("success", "Welcome, " + username + "!");
                 
                 return "redirect:/dashboard";
             } else {
-                logger.warn("Login failed for user: {}", userDto.getUsername());
-                redirectAttributes.addFlashAttribute("error", "Invalid username or password");
-                redirectAttributes.addFlashAttribute("userDto", userDto);
+                logger.warn("Failed login attempt for user: {}", username);
+                redirectAttributes.addFlashAttribute("error", "Invalid username or password. Please try again.");
                 return "redirect:/login";
             }
             
         } catch (Exception e) {
-            logger.error("Error during login: {}", e.getMessage(), e);
+            logger.error("Error during login for user {}: {}", username, e.getMessage(), e);
             redirectAttributes.addFlashAttribute("error", "An error occurred during login. Please try again.");
-            redirectAttributes.addFlashAttribute("userDto", userDto);
             return "redirect:/login";
         }
     }
@@ -172,8 +147,8 @@ public class LoginController {
      * @return true if logged in, false otherwise
      */
     public static boolean isLoggedIn(HttpSession session) {
-        return session.getAttribute("isLoggedIn") != null && 
-               (Boolean) session.getAttribute("isLoggedIn");
+        return session.getAttribute("authenticated") != null && 
+               (Boolean) session.getAttribute("authenticated");
     }
     
     /**

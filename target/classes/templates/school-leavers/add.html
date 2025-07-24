@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add School Leaver - School Leavers System</title>
+    <title th:text="${title}">Add New School Leaver - School Leavers System</title>
     
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -50,15 +50,13 @@
             border: none;
         }
         
-        .page-title {
-            color: #2d3748;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
-        
-        .page-subtitle {
-            color: #718096;
-            font-size: 1.1rem;
+        .page-icon {
+            font-size: 3rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
         }
         
         .form-card {
@@ -67,19 +65,46 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
             padding: 2rem;
             border: none;
+            transition: all 0.3s ease;
         }
         
-        .form-label {
-            color: #2d3748;
+        .form-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 0.75rem 1.5rem;
             font-weight: 600;
-            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(108, 117, 125, 0.3);
         }
         
         .form-control {
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
             padding: 0.75rem 1rem;
-            font-size: 1rem;
             transition: all 0.3s ease;
         }
         
@@ -88,113 +113,50 @@
             box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
         }
         
-        .form-control.is-invalid {
-            border-color: #f56565;
-            box-shadow: 0 0 0 0.2rem rgba(245, 101, 101, 0.25);
-        }
-        
-        .form-control.is-valid {
-            border-color: #48bb78;
-            box-shadow: 0 0 0 0.2rem rgba(72, 187, 120, 0.25);
-        }
-        
-        .invalid-feedback {
-            color: #f56565;
-            font-size: 0.875rem;
-            margin-top: 0.25rem;
-        }
-        
-        .valid-feedback {
-            color: #48bb78;
-            font-size: 0.875rem;
-            margin-top: 0.25rem;
-        }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: none;
-            border-radius: 12px;
-            padding: 1rem 2rem;
+        .form-label {
             font-weight: 600;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
-        }
-        
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
-        }
-        
-        .btn-secondary {
-            background: rgba(102, 126, 234, 0.1);
-            border: 2px solid #667eea;
-            border-radius: 12px;
-            padding: 1rem 2rem;
-            font-weight: 600;
-            font-size: 1.1rem;
-            color: #667eea;
-            transition: all 0.3s ease;
-        }
-        
-        .btn-secondary:hover {
-            background: #667eea;
-            color: white;
-            transform: translateY(-2px);
-        }
-        
-        .form-section {
-            background: rgba(102, 126, 234, 0.05);
-            border: 1px solid rgba(102, 126, 234, 0.1);
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-        }
-        
-        .section-title {
-            color: #667eea;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-        }
-        
-        .section-title i {
-            margin-right: 0.5rem;
+            color: #495057;
+            margin-bottom: 0.5rem;
         }
         
         .alert {
-            border-radius: 12px;
+            border-radius: 10px;
             border: none;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .form-floating {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-floating .form-control {
+            height: 3.5rem;
+        }
+        
+        .form-floating label {
+            padding: 1rem 0.75rem;
+        }
+        
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            padding: 1rem;
+        }
+        
+        .breadcrumb {
+            background: transparent;
+            padding: 0;
+            margin-bottom: 1rem;
+        }
+        
+        .breadcrumb-item a {
+            color: #667eea;
+            text-decoration: none;
             font-weight: 500;
         }
         
-        .alert-success {
-            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
-            color: white;
-        }
-        
-        .alert-danger {
-            background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
-            color: white;
-        }
-        
-        .loading {
-            display: none;
-        }
-        
-        .loading.show {
-            display: inline-block;
-        }
-        
-        .help-text {
-            color: #718096;
-            font-size: 0.875rem;
-            margin-top: 0.25rem;
-        }
-        
-        .required-field::after {
-            content: " *";
-            color: #f56565;
+        .breadcrumb-item.active {
+            color: #6c757d;
         }
     </style>
 </head>
@@ -219,13 +181,8 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/school-leavers">
+                        <a class="nav-link active" href="/school-leavers">
                             <i class="fas fa-database me-1"></i>Data
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="/school-leavers/add">
-                            <i class="fas fa-plus me-1"></i>Add
                         </a>
                     </li>
                     <li class="nav-item">
@@ -241,145 +198,139 @@
     <!-- Main Content -->
     <div class="main-content">
         <div class="container">
-            <!-- Page Header -->
-            <div class="page-header">
-                <div class="row align-items-center">
-                    <div class="col-md-6">
-                        <h1 class="page-title">
-                            <i class="fas fa-plus-circle me-2"></i>Add New School Leaver
-                        </h1>
-                        <p class="page-subtitle">Create a new school leaver record</p>
-                    </div>
-                    <div class="col-md-6 text-md-end">
-                        <a href="/school-leavers" class="btn btn-secondary">
-                            <i class="fas fa-arrow-left me-2"></i>Back to List
+            <!-- Breadcrumb -->
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="/dashboard">
+                            <i class="fas fa-home me-1"></i>Dashboard
                         </a>
-                    </div>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="/school-leavers">
+                            <i class="fas fa-database me-1"></i>School Leavers
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                        <i class="fas fa-plus me-1"></i>Add New
+                    </li>
+                </ol>
+            </nav>
+            
+            <!-- Page Header -->
+            <div class="page-header text-center">
+                <div class="page-icon">
+                    <i class="fas fa-plus-circle"></i>
                 </div>
-            </div>
-            
-            <!-- Alert Messages -->
-            <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
-                <i class="fas fa-check-circle me-2"></i>
-                <span th:text="${success}">Success message</span>
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-            
-            <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
-                <i class="fas fa-exclamation-circle me-2"></i>
-                <span th:text="${error}">Error message</span>
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                <h1 class="mb-3" th:text="${title}">Add New School Leaver</h1>
+                <p class="lead text-muted" th:text="${description}">Create a new school leaver record</p>
             </div>
             
             <!-- Form Card -->
             <div class="form-card">
-                <form id="addForm" th:action="@{/school-leavers/add}" method="post" th:object="${schoolLeaverDto}">
-                    
-                    <!-- Basic Information Section -->
-                    <div class="form-section">
-                        <h5 class="section-title">
-                            <i class="fas fa-info-circle"></i>Basic Information
-                        </h5>
-                        
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="statisticCode" class="form-label required-field">Statistic Code</label>
-                                <input type="text" 
-                                       class="form-control" 
-                                       id="statisticCode" 
-                                       name="statisticCode"
-                                       th:field="*{statisticCode}"
-                                       placeholder="Enter statistic code (e.g., SL001)"
-                                       required>
-                                <div class="help-text">Enter a unique identifier for this statistic</div>
-                                <div class="invalid-feedback" id="statisticCodeError"></div>
-                            </div>
-                            
-                            <div class="col-md-6 mb-3">
-                                <label for="quarter" class="form-label required-field">Quarter</label>
-                                <select class="form-control" id="quarter" name="quarter" th:field="*{quarter}" required>
-                                    <option value="">Select Quarter</option>
-                                    <option value="Q1">Q1 (January - March)</option>
-                                    <option value="Q2">Q2 (April - June)</option>
-                                    <option value="Q3">Q3 (July - September)</option>
-                                    <option value="Q4">Q4 (October - December)</option>
-                                </select>
-                                <div class="help-text">Select the quarter for this data</div>
-                                <div class="invalid-feedback" id="quarterError"></div>
-                            </div>
-                        </div>
-                        
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="year" class="form-label required-field">Year</label>
-                                <input type="number" 
-                                       class="form-control" 
-                                       id="year" 
-                                       name="year"
-                                       th:field="*{year}"
-                                       placeholder="Enter year (e.g., 2024)"
-                                       min="2000" 
-                                       max="2030" 
-                                       required>
-                                <div class="help-text">Enter the year for this data (2000-2030)</div>
-                                <div class="invalid-feedback" id="yearError"></div>
-                            </div>
-                            
-                            <div class="col-md-6 mb-3">
-                                <label for="value" class="form-label required-field">Value</label>
-                                <input type="number" 
-                                       class="form-control" 
-                                       id="value" 
-                                       name="value"
-                                       th:field="*{value}"
-                                       placeholder="Enter value (e.g., 150.5)"
-                                       step="0.01" 
-                                       min="0" 
-                                       required>
-                                <div class="help-text">Enter the numeric value for this statistic</div>
-                                <div class="invalid-feedback" id="valueError"></div>
-                            </div>
-                        </div>
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4 class="mb-0">
+                        <i class="fas fa-edit me-2"></i>Record Information
+                    </h4>
+                    <a href="/school-leavers" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left me-1"></i>Back to List
+                    </a>
+                </div>
+                
+                <!-- Alert Messages -->
+                <div id="alertContainer"></div>
+                
+                <!-- Loading Spinner -->
+                <div id="loadingSpinner" class="loading-spinner">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
                     </div>
-                    
-                    <!-- Additional Information Section -->
-                    <div class="form-section">
-                        <h5 class="section-title">
-                            <i class="fas fa-edit"></i>Additional Information
-                        </h5>
-                        
-                        <div class="row">
-                            <div class="col-12 mb-3">
-                                <label for="description" class="form-label">Description</label>
-                                <textarea class="form-control" 
-                                          id="description" 
-                                          name="description"
-                                          th:field="*{description}"
-                                          rows="3"
-                                          placeholder="Enter additional description or notes (optional)"></textarea>
-                                <div class="help-text">Optional description or notes about this record</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Form Actions -->
+                    <p class="mt-2 text-muted">Saving record...</p>
+                </div>
+                
+                <!-- Form -->
+                <form id="addForm" novalidate>
                     <div class="row">
-                        <div class="col-12">
-                            <hr class="my-4">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <a href="/school-leavers" class="btn btn-secondary">
-                                    <i class="fas fa-times me-2"></i>Cancel
-                                </a>
-                                <button type="submit" class="btn btn-primary" id="submitBtn">
-                                    <span class="btn-text">
-                                        <i class="fas fa-save me-2"></i>Save Record
-                                    </span>
-                                    <span class="loading">
-                                        <i class="fas fa-spinner fa-spin me-2"></i>Saving...
-                                    </span>
-                                </button>
+                        <div class="col-md-6 mb-3">
+                            <label for="statisticCode" class="form-label">
+                                <i class="fas fa-code me-1"></i>Statistic Code
+                            </label>
+                            <input type="text" class="form-control" id="statisticCode" name="statisticCode" 
+                                   placeholder="e.g., EDQ07" required>
+                            <div class="invalid-feedback">
+                                Please provide a statistic code.
                             </div>
                         </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="quarter" class="form-label">
+                                <i class="fas fa-calendar me-1"></i>Quarter
+                            </label>
+                            <input type="text" class="form-control" id="quarter" name="quarter" 
+                                   placeholder="e.g., 2024Q1" required>
+                            <div class="invalid-feedback">
+                                Please provide a quarter.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="statisticLabel" class="form-label">
+                            <i class="fas fa-tag me-1"></i>Statistic Label
+                        </label>
+                        <input type="text" class="form-control" id="statisticLabel" name="statisticLabel" 
+                               placeholder="e.g., Early School Leavers Aged 18-24" required>
+                        <div class="invalid-feedback">
+                            Please provide a statistic label.
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label for="sex" class="form-label">
+                                <i class="fas fa-venus-mars me-1"></i>Sex
+                            </label>
+                            <select class="form-select" id="sex" name="sex" required>
+                                <option value="">Select sex...</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Both sexes">Both sexes</option>
+                            </select>
+                            <div class="invalid-feedback">
+                                Please select a sex.
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4 mb-3">
+                            <label for="unit" class="form-label">
+                                <i class="fas fa-ruler me-1"></i>Unit
+                            </label>
+                            <input type="text" class="form-control" id="unit" name="unit" 
+                                   placeholder="e.g., %" required>
+                            <div class="invalid-feedback">
+                                Please provide a unit.
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4 mb-3">
+                            <label for="value" class="form-label">
+                                <i class="fas fa-chart-line me-1"></i>Value
+                            </label>
+                            <input type="number" class="form-control" id="value" name="value" 
+                                   placeholder="e.g., 15.5" step="0.01" required>
+                            <div class="invalid-feedback">
+                                Please provide a valid value.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        <a href="/school-leavers" class="btn btn-secondary">
+                            <i class="fas fa-times me-1"></i>Cancel
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-1"></i>Save Record
+                        </button>
                     </div>
                 </form>
             </div>
@@ -390,231 +341,104 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
-        // Form validation and submission
-        document.addEventListener('DOMContentLoaded', function() {
-            const form = document.getElementById('addForm');
-            const submitBtn = document.getElementById('submitBtn');
-            const btnText = submitBtn.querySelector('.btn-text');
-            const loading = submitBtn.querySelector('.loading');
+        // Form submission
+        document.getElementById('addForm').addEventListener('submit', function(e) {
+            e.preventDefault();
             
-            // Form validation
-            function validateForm() {
-                let isValid = true;
-                
-                // Validate Statistic Code
-                const statisticCode = document.getElementById('statisticCode');
-                if (!statisticCode.value.trim()) {
-                    showFieldError(statisticCode, 'Statistic code is required');
-                    isValid = false;
-                } else if (statisticCode.value.trim().length < 3) {
-                    showFieldError(statisticCode, 'Statistic code must be at least 3 characters');
-                    isValid = false;
-                } else {
-                    showFieldSuccess(statisticCode);
-                }
-                
-                // Validate Quarter
-                const quarter = document.getElementById('quarter');
-                if (!quarter.value) {
-                    showFieldError(quarter, 'Please select a quarter');
-                    isValid = false;
-                } else {
-                    showFieldSuccess(quarter);
-                }
-                
-                // Validate Year
-                const year = document.getElementById('year');
-                if (!year.value) {
-                    showFieldError(year, 'Year is required');
-                    isValid = false;
-                } else if (year.value < 2000 || year.value > 2030) {
-                    showFieldError(year, 'Year must be between 2000 and 2030');
-                    isValid = false;
-                } else {
-                    showFieldSuccess(year);
-                }
-                
-                // Validate Value
-                const value = document.getElementById('value');
-                if (!value.value) {
-                    showFieldError(value, 'Value is required');
-                    isValid = false;
-                } else if (value.value < 0) {
-                    showFieldError(value, 'Value must be positive');
-                    isValid = false;
-                } else {
-                    showFieldSuccess(value);
-                }
-                
-                return isValid;
+            if (!this.checkValidity()) {
+                e.stopPropagation();
+                this.classList.add('was-validated');
+                return;
             }
             
-            // Show field error
-            function showFieldError(field, message) {
-                field.classList.remove('is-valid');
-                field.classList.add('is-invalid');
-                const errorDiv = document.getElementById(field.id + 'Error');
-                if (errorDiv) {
-                    errorDiv.textContent = message;
-                }
-            }
-            
-            // Show field success
-            function showFieldSuccess(field) {
-                field.classList.remove('is-invalid');
-                field.classList.add('is-valid');
-                const errorDiv = document.getElementById(field.id + 'Error');
-                if (errorDiv) {
-                    errorDiv.textContent = '';
-                }
-            }
-            
-            // Clear field validation
-            function clearFieldValidation(field) {
-                field.classList.remove('is-valid', 'is-invalid');
-                const errorDiv = document.getElementById(field.id + 'Error');
-                if (errorDiv) {
-                    errorDiv.textContent = '';
-                }
-            }
-            
-            // Real-time validation
-            const fields = ['statisticCode', 'quarter', 'year', 'value'];
-            fields.forEach(fieldId => {
-                const field = document.getElementById(fieldId);
-                field.addEventListener('input', function() {
-                    clearFieldValidation(this);
-                });
-                
-                field.addEventListener('blur', function() {
-                    validateField(this);
-                });
-            });
-            
-            // Validate individual field
-            function validateField(field) {
-                switch (field.id) {
-                    case 'statisticCode':
-                        if (!field.value.trim()) {
-                            showFieldError(field, 'Statistic code is required');
-                        } else if (field.value.trim().length < 3) {
-                            showFieldError(field, 'Statistic code must be at least 3 characters');
-                        } else {
-                            showFieldSuccess(field);
-                        }
-                        break;
-                    case 'quarter':
-                        if (!field.value) {
-                            showFieldError(field, 'Please select a quarter');
-                        } else {
-                            showFieldSuccess(field);
-                        }
-                        break;
-                    case 'year':
-                        if (!field.value) {
-                            showFieldError(field, 'Year is required');
-                        } else if (field.value < 2000 || field.value > 2030) {
-                            showFieldError(field, 'Year must be between 2000 and 2030');
-                        } else {
-                            showFieldSuccess(field);
-                        }
-                        break;
-                    case 'value':
-                        if (!field.value) {
-                            showFieldError(field, 'Value is required');
-                        } else if (field.value < 0) {
-                            showFieldError(field, 'Value must be positive');
-                        } else {
-                            showFieldSuccess(field);
-                        }
-                        break;
-                }
-            }
-            
-            // Form submission
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                if (!validateForm()) {
-                    showError('Please correct the errors below');
-                    return;
-                }
-                
-                // Show loading state
-                submitBtn.disabled = true;
-                btnText.style.display = 'none';
-                loading.classList.add('show');
-                
-                // Submit form
-                const formData = new FormData(form);
-                const data = Object.fromEntries(formData);
-                
-                fetch('/api/school-leavers', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(data)
-                })
-                .then(response => response.json())
-                .then(result => {
-                    if (result.success) {
-                        showSuccess('Record created successfully!');
-                        setTimeout(() => {
-                            window.location.href = '/school-leavers';
-                        }, 2000);
-                    } else {
-                        showError('Failed to create record: ' + result.message);
-                        submitBtn.disabled = false;
-                        btnText.style.display = 'inline';
-                        loading.classList.remove('show');
-                    }
-                })
-                .catch(error => {
-                    showError('Error creating record: ' + error.message);
-                    submitBtn.disabled = false;
-                    btnText.style.display = 'inline';
-                    loading.classList.remove('show');
-                });
-            });
+            submitForm();
         });
         
-        // Show success message
-        function showSuccess(message) {
-            const alertDiv = document.createElement('div');
-            alertDiv.className = 'alert alert-success alert-dismissible fade show';
-            alertDiv.innerHTML = `
-                <i class="fas fa-check-circle me-2"></i>
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            `;
+        function submitForm() {
+            showLoading();
             
-            const container = document.querySelector('.container');
-            container.insertBefore(alertDiv, container.firstChild);
-        }
-        
-        // Show error message
-        function showError(message) {
-            const alertDiv = document.createElement('div');
-            alertDiv.className = 'alert alert-danger alert-dismissible fade show';
-            alertDiv.innerHTML = `
-                <i class="fas fa-exclamation-circle me-2"></i>
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            `;
+            const formData = {
+                statisticCode: document.getElementById('statisticCode').value,
+                statisticLabel: document.getElementById('statisticLabel').value,
+                quarter: document.getElementById('quarter').value,
+                sex: document.getElementById('sex').value,
+                unit: document.getElementById('unit').value,
+                value: parseFloat(document.getElementById('value').value)
+            };
             
-            const container = document.querySelector('.container');
-            container.insertBefore(alertDiv, container.firstChild);
-        }
-        
-        // Auto-dismiss alerts
-        setTimeout(function() {
-            const alerts = document.querySelectorAll('.alert');
-            alerts.forEach(function(alert) {
-                const bsAlert = new bootstrap.Alert(alert);
-                bsAlert.close();
+            fetch('/api/school-leavers', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                hideLoading();
+                
+                if (data.success) {
+                    showAlert('success', 'Record created successfully!');
+                    // Reset form
+                    document.getElementById('addForm').reset();
+                    document.getElementById('addForm').classList.remove('was-validated');
+                    
+                    // Redirect to list page after 2 seconds
+                    setTimeout(() => {
+                        window.location.href = '/school-leavers';
+                    }, 2000);
+                } else {
+                    showAlert('error', 'Failed to create record: ' + (data.message || 'Unknown error'));
+                }
+            })
+            .catch(error => {
+                hideLoading();
+                console.error('Error:', error);
+                showAlert('error', 'Failed to create record: ' + error.message);
             });
-        }, 5000);
+        }
+        
+        function showLoading() {
+            document.getElementById('loadingSpinner').style.display = 'block';
+            document.getElementById('addForm').style.opacity = '0.5';
+            document.getElementById('addForm').style.pointerEvents = 'none';
+        }
+        
+        function hideLoading() {
+            document.getElementById('loadingSpinner').style.display = 'none';
+            document.getElementById('addForm').style.opacity = '1';
+            document.getElementById('addForm').style.pointerEvents = 'auto';
+        }
+        
+        function showAlert(type, message) {
+            const alertContainer = document.getElementById('alertContainer');
+            const alertClass = type === 'success' ? 'alert-success' : 'alert-danger';
+            const iconClass = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle';
+            
+            const alertHtml = `
+                <div class="alert ${alertClass} alert-dismissible fade show" role="alert">
+                    <i class="fas ${iconClass} me-2"></i>
+                    ${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            `;
+            
+            alertContainer.innerHTML = alertHtml;
+            
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                const alert = alertContainer.querySelector('.alert');
+                if (alert) {
+                    const bsAlert = new bootstrap.Alert(alert);
+                    bsAlert.close();
+                }
+            }, 5000);
+        }
     </script>
 </body>
 </html> 

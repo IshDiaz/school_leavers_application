@@ -1,5 +1,7 @@
 package com.cct.schoolleavers.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -16,6 +18,7 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Table(name = "users")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class User {
     
     @Id
@@ -31,6 +34,7 @@ public class User {
     @NotBlank(message = "Password is required")
     @Size(min = 5, max = 100, message = "Password must be between 5 and 100 characters")
     @Column(name = "password", nullable = false, length = 100)
+    @JsonIgnore
     private String password;
     
     @Column(name = "enabled", nullable = false)

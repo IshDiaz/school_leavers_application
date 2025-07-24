@@ -1,14 +1,11 @@
 package com.cct.schoolleavers.dto;
 
-import jakarta.validation.constraints.*;
-
 import java.math.BigDecimal;
 
 /**
  * School Leaver Data Transfer Object
  * 
- * This DTO is used for form validation and data transfer between layers.
- * Contains simple validation annotations for backend form validation.
+ * Simple DTO for data transfer.
  * 
  * @author CCT Student
  * @version 1.0
@@ -16,30 +13,11 @@ import java.math.BigDecimal;
 public class SchoolLeaverDto {
     
     private Long id;
-    
-    @NotBlank(message = "Statistic code is required")
-    @Size(max = 20, message = "Statistic code must not exceed 20 characters")
     private String statisticCode;
-    
-    @NotBlank(message = "Statistic label is required")
-    @Size(max = 100, message = "Statistic label must not exceed 100 characters")
     private String statisticLabel;
-    
-    @NotBlank(message = "Quarter is required")
-    @Pattern(regexp = "^[Q][1-4]\\d{4}$", message = "Quarter must be in format Q1YYYY, Q2YYYY, Q3YYYY, or Q4YYYY")
     private String quarter;
-    
-    @NotBlank(message = "Sex is required")
-    @Size(max = 20, message = "Sex must not exceed 20 characters")
     private String sex;
-    
-    @NotBlank(message = "Unit is required")
-    @Size(max = 10, message = "Unit must not exceed 10 characters")
     private String unit;
-    
-    @NotNull(message = "Value is required")
-    @DecimalMin(value = "0.0", inclusive = true, message = "Value must be greater than or equal to 0")
-    @DecimalMax(value = "999.99", inclusive = true, message = "Value must be less than or equal to 999.99")
     private BigDecimal value;
     
     // Default constructor
